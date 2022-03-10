@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Digital Clock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap" rel="stylesheet">
+</head>
+<body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    body{
+        background: #000000;
+    }
+    .clock {
+        display: flex;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        justify-content: center;
+        align-items: center;
+        gap: .25rem;
+        color: #ff0000;
+        font-size: 32vw;
+        letter-spacing: 1vw;
+    }
+</style>
+<div class="clock">
+    <div class="hour"></div>
+    <div>:</div>
+    <div class="minute"></div>
+</div>
+<script src="https://richtr.github.io/NoSleep.js/dist/NoSleep.min.js" type="text/javascript"></script>
+<script>
+  var noSleep = new NoSleep();
+
+  var wakeLockEnabled = false;
+  var toggleEl = document.body;
+  var elem = document.documentElement;
+
+  /* View in fullscreen */
+  function openFullscreen() {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+      elem.msRequestFullscreen();
+    }
+  }
+
+  /* Close fullscreen */
+  function closeFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { /* Safari */
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { /* IE11 */
+      document.msExitFullscreen();
+    }
+  }
+
+  toggleEl.addEventListener('click', function () {
+    openFullscreen();
+    if (wakeLockEnabled) return;
+    noSleep.enable();
+    wakeLockEnabled = true;
+    console.log('wake lock is enabled!');
+  }, false);
+
+  function pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = "0" + num;
+    return num;
+  }
+
+  const hourEl = document.querySelector('.clock .hour');
+  const minuteEl = document.querySelector('.clock .minute');
+  function updateTime() {
+    const date = new Date();
+    const hours = date.getHours()
+    const minutes = date.getMinutes();
+    var paddedHour = pad(hours, 2);
+    var paddedMinutes = pad(minutes,2);
+    if(hourEl.innerHTML != paddedHour) hourEl.innerHTML = paddedHour;
+    if(minuteEl.innerHTML != paddedMinutes) minuteEl.innerHTML = paddedMinutes;
+  }
+  updateTime();
+  setInterval(() => {
+    updateTime();
+  }, 1000);
+</script>
+</body>
+</html>
